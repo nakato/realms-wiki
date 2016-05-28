@@ -13,38 +13,14 @@ function splitInput(str) {
 /* © 2013 j201
  * https://github.com/j201/meta-marked */
 
-// Splits the given string into a meta section and a markdown section if a meta section is present, else returns null
-var metaMarked = function(src, opt, callback) {
-  if (Object.prototype.toString.call(src) !== '[object String]')
-    throw new TypeError('First parameter must be a string.');
-
-  var mySplitInput = splitInput(src);
-  if (mySplitInput) {
-    var meta;
-    try {
-      meta = jsyaml.safeLoad(mySplitInput[0]);
-    } catch(e) {
-      meta = null;
-    }
-    return {
-      meta: meta,
-      md: mySplitInput[1]
-    };
-  } else {
-    return {
-      meta: null,
-      md: src
-    }
-  }
-};
 
 marked.setOptions({
   renderer: new marked.Renderer(),
   gfm: true,
   tables: true,
-  breaks: false,
+  breaks: true,
   pedantic: false,
-  sanitize: false,
+  sanitize: true,
   smartLists: true,
   smartypants: false
 });
@@ -63,7 +39,6 @@ var MDR = {
       sanitize = this.sanitize;
     }
     this.md = md;
-    this.processMeta();
     try {
       var html = this.parse(this.md);
     } catch(e) {
@@ -86,26 +61,8 @@ var MDR = {
         return id;
       });
     }
-    this.hook();
     return html;
   },
-
-  processMeta: function() {
-    var doc = metaMarked(this.md);
-    this.md = doc.md;
-    this.meta = doc.meta;
-    if (this.meta) {
-      try {
-        var template = Handlebars.compile(this.md);
-        this.md = template(this.meta);
-      } catch(e) {
-        console.log(e);
-      }
-    }
-  },
-
-  hook: function() {
-  }
 };
 
 MDR.renderer.table = function(header, body) {

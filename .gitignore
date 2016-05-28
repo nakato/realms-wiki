@@ -1,4 +1,5 @@
 .vagrant
+.tox
 .venv
 .venv-pypy
 .idea
@@ -6,6 +7,7 @@
 *.pyc
 *.egg-info
 *.pid
+*.swp
 pidfile
 /dist
 /build
@@ -18,3 +20,6 @@ realms/static/assets/*
 /wiki.db
 /wiki
 npm-debug.log
+/.eggs
+AUTHORS
+ChangeLog

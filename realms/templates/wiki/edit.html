@@ -2,45 +2,11 @@
 {% block js %}
   <script>
     var Commit = {};
-    Commit.info = {{ info|tojson }};
+    Commit.info = {{ info }};
 
     var PAGE_NAME = '{{ name }}';
   </script>
-  <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
-
-  {% if partials %}
-    <script>
-      $(function() {
-        {% for name, value in partials.items() %}
-          {% if name and value %}
-            try {
-              Handlebars.registerPartial({{ name|tojson|safe }}, {{ value.data|tojson|safe }});
-            } catch (e) {
-              // no data?
-            }
-          {% endif %}
-        {% endfor %}
-      });
-    </script>
-  {% endif %}
-
-  {% if config.get('COLLABORATION') %}
-    <script src="{{ url_for('static', filename='js/collaboration/main.js') }}"></script>
-  {% endif %}
-
-  {% if config.get('COLLABORATION') == 'firepad' %}
-    <script>
-      Config['FIREBASE_HOSTNAME'] = {{ config.get('FIREBASE_HOSTNAME')|tojson }};
-    </script>
-    <script src="https://cdn.firebase.com/js/client/1.0.17/firebase.js"></script>
-    <script src="https://cdn.firebase.com/libs/firepad/1.0.0/firepad.min.js"></script>
-    <script src="{{ url_for('static', filename='js/collaboration/firepad.js') }}"></script>
-  {% endif %}
-
-  {% if config.get('COLLABORATION') == 'togetherjs' %}
-    <script src="{{ url_for('static', filename='js/collaboration/togetherjs.js') }}"></script>
-    <script src="https://togetherjs.com/togetherjs-min.js"></script>
-  {% endif %}
+  <script src="/static/js/editor.js"></script>
 
 {% endblock %}
 
@@ -58,21 +24,6 @@
 
       <div class="col-md-6 col-xs-4 text-right">
 
-        {% if config.get('COLLABORATION') %}
-          <div class="btn-group">
-            <button style='display:none' class="btn btn-danger btn-sm" id="end-collaboration">
-              <i class="fa fa-comments-o"></i>
-              <span class="hidden-xs">End Collaboration</span>
-            </button>
-          </div>
-          <div class="btn-group">
-            <button style='display:none' class="btn btn-default btn-sm" id="loading-collaboration" type="button">
-              <i class="fa fa-cog fa-spin"></i>
-              <span class="hidden-xs">Loading</span>
-            </button>
-          </div>
-        {% endif %}
-
         <div class="dropdown btn-group">
           <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="editor-actions"
                   data-toggle="dropdown" title="Actions">
@@ -81,12 +32,6 @@
           </button>
 
           <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="editor-actions">
-            {% if config.get('COLLABORATION') %}
-              <li role="presentation">
-                <a role="menuitem" tabindex="-1" href="#" id="start-collaboration">Collaborate</a>
-              </li>
-              <li role="presentation" class="divider"></li>
-            {% endif %}
             <li role="presentation">
               <a role="menuitem" tabindex="-1" href="#" id="discard-draft-btn">Delete Draft</a>
             </li>
@@ -132,17 +77,10 @@
         </div>
 
         <div class="btn-group">
-          {% if name in config['WIKI_LOCKED_PAGES'] %}
-            <a class="btn btn-danger btn-sm">
-              <i class="fa fa-lock"></i>
-              <span class="hidden-xs">Locked</span>
-            </a>
-          {% else %}
-            <a id="submit-btn" class="btn btn-primary btn-sm">
-              <i class="fa fa-save"></i>
-              <span class="hidden-xs">Save</span>
-            </a>
-          {% endif %}
+          <a id="submit-btn" class="btn btn-primary btn-sm">
+            <i class="fa fa-save"></i>
+            <span class="hidden-xs">Save</span>
+          </a>
         </div>
 
       </div>
@@ -155,7 +93,7 @@
       </header>
       <section id="entry-markdown-content" class="entry-markdown-content">
         <div id="editor-{{ name | b64encode }}" data-submitbtn='submit-btn' data-themeselect="theme-list" data-mode="markdown"
-             data-preview="preview" class="editor">{{ content }}</div>
+             data-preview="preview" class="editor">{{ content|escape }}</div>
       </section>
     </section>
 

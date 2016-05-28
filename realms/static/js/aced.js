@@ -20,10 +20,9 @@ function Aced(settings) {
     theme: 'idle_fingers',
     themePath: '/static/vendor/ace-builds/src',
     mode: 'markdown',
-    autoSave: true,
+    autoSave: false,
     autoSaveInterval: 5000,
     syncPreview: false,
-    keyMaster: false,
     submit: function(data){ alert(data); },
     showButtonBar: false,
     themeSelect: null,
@@ -119,26 +118,6 @@ function Aced(settings) {
 
   function render(content) {
     return (options.renderer) ? options.renderer(content) : content;
-  }
-
-  function bindKeyboard() {
-    // CMD+s TO SAVE DOC
-    key('command+s, ctrl+s', function (e) {
-      submit();
-      e.preventDefault();
-    });
-
-    var saveCommand = {
-      name: "save",
-      bindKey: {
-        mac: "Command-S",
-        win: "Ctrl-S"
-      },
-      exec: function () {
-        submit();
-      }
-    };
-    editor.commands.addCommand(saveCommand);
   }
 
   function info(info) {
@@ -368,10 +347,6 @@ function Aced(settings) {
           setTheme($(this).val());
         });
       }
-    }
-
-    if (options.keyMaster) {
-      bindKeyboard();
     }
 
     if (preview) {

@@ -68,7 +68,7 @@ $(function(){
 
 var deletePage = function() {
   var pageName = $page_name.val();
-  var path = Config['RELATIVE_PATH'] + '/' + pageName;
+  var path = '/' + pageName;
 
   $.ajax({
     type: 'DELETE',
@@ -96,8 +96,8 @@ var aced = new Aced({
 
     // If renaming an existing page, use the old page name for the URL to PUT to
     var subPath = (PAGE_NAME) ? PAGE_NAME : data['name'];
-    var path = Config['RELATIVE_PATH'] + '/' + subPath;
-    var newPath = Config['RELATIVE_PATH'] + '/' + data['name'];
+    var path = '/' + subPath;
+    var newPath = '/' + data['name'];
 
     var type = (Commit.info['sha']) ? "PUT" : "POST";
 
@@ -108,12 +108,7 @@ var aced = new Aced({
       dataType: 'json'
     }).always(function(data, status, error) {
       var res = data['responseJSON'];
-      if (res && res['error']) {
-        $page_name.addClass('parsley-error');
-        bootbox.alert("<h3>" + res['message'] + "</h3>");
-      } else {
-        location.href = newPath;
-      }
+      location.href = newPath;
     });
   }
 });

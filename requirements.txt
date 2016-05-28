@@ -1,1 +1,7 @@
--e .
+Flask==0.10.1
+Flask-Assets==0.10
+PyYAML==3.11
+click==3.3
+ghdiff==0.4
+gitpython
+pbr
